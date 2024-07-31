@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/BehaviourTree/UI/BehaviourTreeEditor.uss?fileID=7433441132597879392&amp;guid=b8d7b56207815a44db5e22afd24d75b7&amp;type=3#BehaviourTreeEditor" />
+    <BehaviourTree.Editor.SplitView orientation="Horizontal" fixed-pane-initial-dimension="200" style="white-space: normal;">
+        <ui:VisualElement name="left-panel" style="width: 200px; min-width: 200px;">
+            <ui:VisualElement name="inspector-container" style="background-color: rgb(53, 53, 53); height: 1000px; min-height: 1000px; min-width: 250px; width: auto;">
+                <ui:Label text="Inspector" display-tooltip-when-elided="true" style="background-color: rgb(38, 38, 38); height: 20px;" />
+                <BehaviourTree.Editor.InspectorView style="width: 200px; height: auto; min-width: auto; min-height: 1000px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="right-panel">
+            <ui:Label text="Behaviour Tree&#10;" display-tooltip-when-elided="true" style="height: 20px; background-color: rgb(39, 39, 39);" />
+            <BehaviourTree.Editor.BehaviourTreeView focusable="true" style="height: auto; min-height: 2000px; min-width: 2000px;" />
+        </ui:VisualElement>
+    </BehaviourTree.Editor.SplitView>
+</ui:UXML>

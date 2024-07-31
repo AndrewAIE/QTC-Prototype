@@ -42,7 +42,7 @@ public class QTE_System: MonoBehaviour
     }
     private bool QTECheck()
     {
-        
+        return false;
 
     }
 
