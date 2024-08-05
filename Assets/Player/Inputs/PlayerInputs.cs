@@ -156,12 +156,12 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""North"",
-                    ""type"": ""Value"",
+                    ""type"": ""Button"",
                     ""id"": ""cf4c8fd2-3574-4eb3-9503-950e21347213"",
-                    ""expectedControlType"": """",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""South"",
