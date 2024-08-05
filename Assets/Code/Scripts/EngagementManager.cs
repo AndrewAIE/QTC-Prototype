@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EngagementManager : MonoBehaviour
 {
-    public MovementForTest Player;
+    public PlayerController Player;
     private Vector3 m_offset;
 
     private ENEMY enemy;
@@ -39,7 +39,7 @@ public class EngagementManager : MonoBehaviour
                     enemy.ResetEnemy();
                     enemy = null;
                     ResetEngagement();
-                    Player.Engaged = false;
+                   
                     
                 }
                 else
@@ -71,7 +71,7 @@ public class EngagementManager : MonoBehaviour
 
     public void FailInput()
     {
-        Player.ResetPlayer();
+        //Player.ResetPlayer();
         ResetEngagement();
     }
 

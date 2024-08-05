@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MovementForTest : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class MovementForTest : MonoBehaviour
     public float Speed;
     public EngagementManager EngagementMan;
     private Vector3 m_resetPos;
+    private Input m_playerInput;
+
 
     public void Start()
     {
@@ -37,7 +40,6 @@ public class MovementForTest : MonoBehaviour
         }
     }
 
-
     public void Engage(ENEMY _enemy)
     {
         Engaged = true;
@@ -53,5 +55,4 @@ public class MovementForTest : MonoBehaviour
             Engaged = false;
         }
     }
-
 }
