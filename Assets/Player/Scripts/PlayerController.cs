@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     {
         m_moveDirection += Move.action.ReadValue<Vector2>().x * getCameraRight(m_playerCamera);
         m_moveDirection += Move.action.ReadValue<Vector2>().y * getCameraForward(m_playerCamera);
-        
+        transform.forward = m_moveDirection;
         m_rb.AddForce(m_moveDirection * Accel, ForceMode.Acceleration);       
 
         if(m_rb.velocity.magnitude > TopSpeed)
@@ -49,12 +49,14 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {      
-        if(Move.action.IsPressed())
+        if(Move.action.WasPressedThisFrame())
         {
+            Debug.Log("ZOOM");
             m_anim.SetTrigger("Run");
         }
-        if(m_rb.velocity.magnitude == 0)
+        if(Move.action.WasReleasedThisFrame())
         {
+            Debug.Log("UnZoom");
             m_anim.SetTrigger("Idle");
         }
     } 
