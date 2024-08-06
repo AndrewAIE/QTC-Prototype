@@ -156,17 +156,8 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""North"",
-                    ""type"": ""Value"",
-                    ""id"": ""cf4c8fd2-3574-4eb3-9503-950e21347213"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""South"",
                     ""type"": ""Button"",
-                    ""id"": ""68855ac7-bb0e-4e66-a95f-6e99ae4ba5a8"",
+                    ""id"": ""cf4c8fd2-3574-4eb3-9503-950e21347213"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -176,6 +167,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""name"": ""East"",
                     ""type"": ""Button"",
                     ""id"": ""f95f21fd-46df-421f-83b3-5cc95667ad13"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""South"",
+                    ""type"": ""Button"",
+                    ""id"": ""68855ac7-bb0e-4e66-a95f-6e99ae4ba5a8"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -211,28 +211,6 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""North"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b5286993-4cfa-4f54-95ab-f61ec9ede02c"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""South"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""025ae21b-bc0e-4aae-a19a-a3e91b11813e"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""South"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -279,6 +257,28 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""West"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b5286993-4cfa-4f54-95ab-f61ec9ede02c"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""South"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""025ae21b-bc0e-4aae-a19a-a3e91b11813e"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""South"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -291,8 +291,8 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         // QTE
         m_QTE = asset.FindActionMap("QTE", throwIfNotFound: true);
         m_QTE_North = m_QTE.FindAction("North", throwIfNotFound: true);
-        m_QTE_South = m_QTE.FindAction("South", throwIfNotFound: true);
         m_QTE_East = m_QTE.FindAction("East", throwIfNotFound: true);
+        m_QTE_South = m_QTE.FindAction("South", throwIfNotFound: true);
         m_QTE_West = m_QTE.FindAction("West", throwIfNotFound: true);
     }
 
@@ -402,16 +402,16 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_QTE;
     private List<IQTEActions> m_QTEActionsCallbackInterfaces = new List<IQTEActions>();
     private readonly InputAction m_QTE_North;
-    private readonly InputAction m_QTE_South;
     private readonly InputAction m_QTE_East;
+    private readonly InputAction m_QTE_South;
     private readonly InputAction m_QTE_West;
     public struct QTEActions
     {
         private @PlayerInputs m_Wrapper;
         public QTEActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
         public InputAction @North => m_Wrapper.m_QTE_North;
-        public InputAction @South => m_Wrapper.m_QTE_South;
         public InputAction @East => m_Wrapper.m_QTE_East;
+        public InputAction @South => m_Wrapper.m_QTE_South;
         public InputAction @West => m_Wrapper.m_QTE_West;
         public InputActionMap Get() { return m_Wrapper.m_QTE; }
         public void Enable() { Get().Enable(); }
@@ -425,12 +425,12 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @North.started += instance.OnNorth;
             @North.performed += instance.OnNorth;
             @North.canceled += instance.OnNorth;
-            @South.started += instance.OnSouth;
-            @South.performed += instance.OnSouth;
-            @South.canceled += instance.OnSouth;
             @East.started += instance.OnEast;
             @East.performed += instance.OnEast;
             @East.canceled += instance.OnEast;
+            @South.started += instance.OnSouth;
+            @South.performed += instance.OnSouth;
+            @South.canceled += instance.OnSouth;
             @West.started += instance.OnWest;
             @West.performed += instance.OnWest;
             @West.canceled += instance.OnWest;
@@ -441,12 +441,12 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @North.started -= instance.OnNorth;
             @North.performed -= instance.OnNorth;
             @North.canceled -= instance.OnNorth;
-            @South.started -= instance.OnSouth;
-            @South.performed -= instance.OnSouth;
-            @South.canceled -= instance.OnSouth;
             @East.started -= instance.OnEast;
             @East.performed -= instance.OnEast;
             @East.canceled -= instance.OnEast;
+            @South.started -= instance.OnSouth;
+            @South.performed -= instance.OnSouth;
+            @South.canceled -= instance.OnSouth;
             @West.started -= instance.OnWest;
             @West.performed -= instance.OnWest;
             @West.canceled -= instance.OnWest;
@@ -474,8 +474,8 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     public interface IQTEActions
     {
         void OnNorth(InputAction.CallbackContext context);
-        void OnSouth(InputAction.CallbackContext context);
         void OnEast(InputAction.CallbackContext context);
+        void OnSouth(InputAction.CallbackContext context);
         void OnWest(InputAction.CallbackContext context);
     }
 }

@@ -134,17 +134,8 @@
             "actions": [
                 {
                     "name": "North",
-                    "type": "Value",
-                    "id": "cf4c8fd2-3574-4eb3-9503-950e21347213",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "South",
                     "type": "Button",
-                    "id": "68855ac7-bb0e-4e66-a95f-6e99ae4ba5a8",
+                    "id": "cf4c8fd2-3574-4eb3-9503-950e21347213",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -154,6 +145,15 @@
                     "name": "East",
                     "type": "Button",
                     "id": "f95f21fd-46df-421f-83b3-5cc95667ad13",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "South",
+                    "type": "Button",
+                    "id": "68855ac7-bb0e-4e66-a95f-6e99ae4ba5a8",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -189,28 +189,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "North",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b5286993-4cfa-4f54-95ab-f61ec9ede02c",
-                    "path": "<Gamepad>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "South",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "025ae21b-bc0e-4aae-a19a-a3e91b11813e",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "South",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -255,6 +233,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "West",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b5286993-4cfa-4f54-95ab-f61ec9ede02c",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "South",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "025ae21b-bc0e-4aae-a19a-a3e91b11813e",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "South",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
