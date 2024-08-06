@@ -26,61 +26,6 @@
             ],
             "bindings": [
                 {
-                    "name": "WASD",
-                    "id": "428ae83b-e0ad-447e-9e34-be0f8b51780f",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Direction",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "74195d04-a0cf-452f-9570-09ef3afbe6ff",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Direction",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "9623efec-3b99-42d4-8d6a-0201e6819660",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Direction",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "2ec75ec0-e138-412d-8066-b8b4f6323eaa",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Direction",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "3d6fed49-c3de-4779-859c-084b20cc6565",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Direction",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "2D Vector",
                     "id": "42853464-badb-4ca3-a0fe-9bb34298a423",
                     "path": "2DVector",
@@ -137,8 +82,8 @@
                 },
                 {
                     "name": "",
-                    "id": "98505f6d-de4f-41f4-a920-aa85a26d46cd",
-                    "path": "<Mouse>/delta",
+                    "id": "24fa8546-dbf1-439e-b724-7ef50beb7d29",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

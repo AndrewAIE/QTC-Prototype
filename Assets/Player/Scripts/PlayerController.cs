@@ -6,23 +6,25 @@ using UnityEngine.InputSystem.Utilities;
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody m_rb;
+    private CharacterController m_cC;
 
-    public InputActionReference Move;
-    public float Accel;
-    public float TopSpeed;
+    public InputActionReference Move;    
+    public float Speed;
     [SerializeField]
     private Camera m_playerCamera;
     Animator m_anim;
 
     private bool m_engaged = false;
-    
+    private bool m_moving;
+
+    public float m_turnSpeed;
+
     private Vector3 m_moveDirection;
     
 
     private void Awake()
     {
-        m_rb = GetComponent<Rigidbody>();
+        m_cC = GetComponent<CharacterController>();
         m_anim = GetComponentInChildren<Animator>();
     }
 
@@ -33,40 +35,33 @@ public class PlayerController : MonoBehaviour
     }
 
     private void FixedUpdate()
-    {
-        m_moveDirection += Move.action.ReadValue<Vector2>().x * getCameraRight(m_playerCamera);
-        m_moveDirection += Move.action.ReadValue<Vector2>().y * getCameraForward(m_playerCamera);
-        transform.forward = m_moveDirection;
-        m_rb.AddForce(m_moveDirection * Accel, ForceMode.Acceleration);       
-
-        if(m_rb.velocity.magnitude > TopSpeed)
+    {        
+        if (m_moving)
         {
-            m_rb.velocity = m_rb.velocity.normalized * TopSpeed;
-        }
-        m_moveDirection = Vector3.zero;
+            Debug.Log("X Input: " + Move.action.ReadValue<Vector2>().x);
+            Vector3 rightVector = Move.action.ReadValue<Vector2>().x * getCameraRight(m_playerCamera);
+            Vector3 forwardVector = Move.action.ReadValue<Vector2>().y * getCameraForward(m_playerCamera);
+            
+            m_moveDirection = rightVector + forwardVector;
+            m_moveDirection.Normalize();
+
+            transform.forward = m_moveDirection;
+            m_cC.SimpleMove(m_moveDirection * Speed);
+        }             
     }    
 
     // Update is called once per frame
     void Update()
-    {      
-        if(Move.action.WasPressedThisFrame())
-        {
-            Debug.Log("ZOOM");
-            m_anim.SetTrigger("Run");
-        }
-        if(Move.action.WasReleasedThisFrame())
-        {
-            Debug.Log("UnZoom");
-            m_anim.SetTrigger("Idle");
-        }
+    {
+        //set facing direction based off of input
+        handleOnInput();
     } 
     
     private Vector3 getCameraForward(Camera _playerCamera)
     {
         Vector3 forward = _playerCamera.transform.forward;
         forward.y = 0;
-        return forward.normalized;
-        
+        return forward.normalized;        
     }
 
     private Vector3 getCameraRight(Camera _playerCamera)
@@ -74,6 +69,20 @@ public class PlayerController : MonoBehaviour
         Vector3 right = _playerCamera.transform.right;
         right.y = 0;
         return right.normalized;
+    }
+
+    private void handleOnInput()
+    {
+        if (Move.action.WasPressedThisFrame())
+        {
+            m_moving = true;
+            m_anim.SetTrigger("Run");
+        }
+        if (Move.action.WasReleasedThisFrame())
+        {
+            m_moving = false;
+            m_anim.SetTrigger("Idle");
+        }
     }
 
 }
