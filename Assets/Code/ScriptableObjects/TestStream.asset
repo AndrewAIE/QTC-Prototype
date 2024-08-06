@@ -10,7 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ee7effaa6ba951469901e448fe79747, type: 3}
-  m_Name: New QTE
+  m_Name: TestStream
   m_EditorClassIdentifier: 
   stream:
-    qteInputs: []
+    qteInputs:
+    - inputs: 00010000
+      mashAmount: 0
+      TimeToComplete: 2
+    - inputs: 00000001
+      mashAmount: 0
+      TimeToComplete: 2
+    - inputs: 00010000
+      mashAmount: 0
+      TimeToComplete: 2
+    - inputs: 01000000
+      mashAmount: 0
+      TimeToComplete: 2

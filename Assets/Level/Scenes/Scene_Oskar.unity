@@ -1415,17 +1415,7 @@ MonoBehaviour:
   - {fileID: 1326167079}
   - {fileID: 379436090}
   TextCanvas: {fileID: 281134105}
-  m_Stream:
-    qteInputs:
-    - inputs: 01000000
-      mashAmount: 0
-      TimeToComplete: 4
-    - inputs: 00010000
-      mashAmount: 0
-      TimeToComplete: 4
-    - inputs: 00000100
-      mashAmount: 20
-      TimeToComplete: 5
+  StreamOBJ: {fileID: 11400000, guid: 9313a34b22a96374e9b163506b2bf2fd, type: 2}
   m_streamPosition: 0
 --- !u!1 &1907421050
 GameObject:

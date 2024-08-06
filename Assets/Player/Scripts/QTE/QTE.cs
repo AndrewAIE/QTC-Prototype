@@ -2,6 +2,7 @@ using QTCGlobals;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+
 [CreateAssetMenu]
 public class QTE : ScriptableObject
 {
