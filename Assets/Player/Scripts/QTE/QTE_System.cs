@@ -1,17 +1,20 @@
 using QTCGlobals;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 
-public class QTE_System: MonoBehaviour
+public class QTE_System : MonoBehaviour
 {
     [SerializeReference] private QTEState m_currentState = QTEState.Waiting;
+    private QTEState m_oldState = QTEState.Default;
 
     PlayerInputs i_playerInputs;
     private InputAction i_North, i_South, i_East, i_West;
 
+    
     [SerializeField] private Toggle[] ButtonCanvas;
     [SerializeField] private TextMeshProUGUI TextCanvas;
 
@@ -25,7 +28,7 @@ public class QTE_System: MonoBehaviour
     /// </summary>
     private QTEINPUTS m_playerQTEInput;
     private bool m_noInput;
- 
+
     /// <summary>
     /// public access to the current stream (need to set up) (only change when not running)
     /// </summary>
@@ -40,11 +43,6 @@ public class QTE_System: MonoBehaviour
     [SerializeField] private int m_streamPosition = 0;
 
     #region Startup
-    public void StartQTE()
-    {
-        m_currentState = QTEState.Running;
-    }
-
     void Awake()
     {
         i_playerInputs = new PlayerInputs();
@@ -69,37 +67,28 @@ public class QTE_System: MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        OnStateChange();
         switch (m_currentState)
         {
             case QTEState.Waiting:
 
                 m_StreamOBJ = Instantiate(StreamOBJ); // creates a new version of 
-                gatherInput();
-                for (int i = 0; i < 4; i++) // check inputs against
-                {
-                    if (m_playerQTEInput.inputs[i] == true) m_currentState = QTEState.Running;
-                }
+                
                 break;
 
             case QTEState.Running:
                 gatherInput();
-                
-                    StreamManager();
+
+                StreamManager();
                 if (m_StreamOBJ.stream.qteInputs.Length <= m_streamPosition)
                 {
-                    m_currentState = QTEState.Complete;
+                    OnComplete();
                 }
                 else if (m_StreamOBJ.stream.qteInputs[m_streamPosition].TimeToComplete <= 0)
                 {
-                    m_currentState = QTEState.Failed;
+                    OnFail();
                 }
-                
-                break;
-            case QTEState.Complete:
-                
-                break;
-            case QTEState.Failed:
-                
+
                 break;
         }
         Display();
@@ -135,17 +124,17 @@ public class QTE_System: MonoBehaviour
                 bool allInputsCorrect = true;
                 for (int i = 0; i < 4; i++) // check inputs against
                 {
-                    Debug.LogWarning("Button Pressed: " + i + ", " + m_playerQTEInput.inputs[i]);
                     if (m_StreamOBJ.stream.qteInputs[m_streamPosition].inputs[i] == m_playerQTEInput.inputs[i])
                     {
                         correctInput = true;
                     }
                     if (correctInput != true) allInputsCorrect = false;
+                    correctInput = false;
                 }
-                if (allInputsCorrect) OnSuccessInput(); 
+                if (allInputsCorrect) OnSuccessInput();
                 else OnFailInput();
             }
-            m_StreamOBJ.stream.qteInputs[m_streamPosition].TimeToComplete -= Time.unscaledDeltaTime;
+            if (m_streamPosition < m_StreamOBJ.stream.qteInputs.Length) m_StreamOBJ.stream.qteInputs[m_streamPosition].TimeToComplete -= Time.unscaledDeltaTime;
         }
     }
     private void Display()
@@ -161,18 +150,14 @@ public class QTE_System: MonoBehaviour
         switch (m_currentState)
         {
             case QTEState.Waiting:
-
+                
                 break;
             case QTEState.Running:
-                string timeLeft = string.Format("{0:0.00}", m_StreamOBJ.stream.qteInputs[m_streamPosition].TimeToComplete);
-                TextCanvas.text = $"Time: {timeLeft}";
-
-                break;
-            case QTEState.Complete:
-
-                break;
-            case QTEState.Failed:
-
+                if (m_streamPosition < m_StreamOBJ.stream.qteInputs.Length)
+                {
+                    string timeLeft = string.Format("{0:0.00}", m_StreamOBJ.stream.qteInputs[m_streamPosition].TimeToComplete);
+                    TextCanvas.text = $"Time: {timeLeft}";
+                }
                 break;
         }
     }
@@ -180,14 +165,26 @@ public class QTE_System: MonoBehaviour
     #region Events
     public void StartCombat(EnemyController enemy)
     {
+        /////////// other stuff to go here
+        
+        ///////////
+        StartQTE();
+    }
+    public void StartQTE()
+    {
+        /////////// other stuff to go here
 
+        ///////////
+        m_currentState = QTEState.Running;
     }
     private void OnComplete()
     {
+        m_currentState = QTEState.Waiting;
         Debug.Log("Complete");
     }
     private void OnFail()
     {
+        m_currentState = QTEState.Waiting;
         Debug.Log("Failed");
     }
     private void OnFailInput()
@@ -196,8 +193,28 @@ public class QTE_System: MonoBehaviour
     }
     private void OnSuccessInput()
     {
+        Debug.LogWarning("Buttons Pressed: " + m_playerQTEInput.inputs);
         if (m_StreamOBJ.stream.qteInputs[m_streamPosition].mashAmount > 0) m_StreamOBJ.stream.qteInputs[m_streamPosition].mashAmount--;
         else m_streamPosition++;
+    }
+
+    /// <summary>
+    /// call once per update to enable state change code
+    /// </summary>
+    private void OnStateChange()
+    {
+        if (m_oldState == m_currentState) return; // no code above this
+
+        switch (m_currentState)
+        {
+            case QTEState.Waiting:
+                GetComponent<Canvas>().enabled = false;
+                break;
+            case QTEState.Running:
+                GetComponent<Canvas>().enabled = true;
+                break;
+        }
+        m_oldState = m_currentState; // once run old state == this state to prevent from running again
     }
 
     #endregion
