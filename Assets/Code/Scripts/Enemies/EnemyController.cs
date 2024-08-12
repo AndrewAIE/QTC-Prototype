@@ -45,16 +45,16 @@ public class EnemyController : MonoBehaviour
     {
         switch (_blockNum)
         {
-            case 1:
+            case 0:
                 m_anim.SetTrigger("Block1");
                 break;
-            case 2:
+            case 1:
                 m_anim.SetTrigger("Block2");
                 break;
-            case 3:
+            case 2:
                 m_anim.SetTrigger("Block3");
                 break;
-            case 4:
+            case 3:
                 m_anim.SetTrigger("Block4");
                 break;
             default:
@@ -66,16 +66,16 @@ public class EnemyController : MonoBehaviour
     {
         switch (_attackNum)
         {
-            case 1:
+            case 0:
                 m_anim.SetTrigger("Attack1");
                 break;
-            case 2:
+            case 1:
                 m_anim.SetTrigger("Attack2");
                 break;
-            case 3:
+            case 2:
                 m_anim.SetTrigger("Attack3");
                 break;
-            case 4:
+            case 3:
                 m_anim.SetTrigger("Attack4");
                 break;
             default:
