@@ -106,6 +106,7 @@ public class PlayerController : MonoBehaviour
     {
         m_anim.SetTrigger("DrawWeapon");
         m_anim.SetBool("Run", false);
+        transform.forward = FaceTarget(_enemy.gameObject);
         m_combatSystem.StartCombat(_enemy);
         m_engaged = true;
         m_moving = false;
@@ -115,6 +116,12 @@ public class PlayerController : MonoBehaviour
     {
         m_anim.SetTrigger("SheatheWeapon");
         m_engaged = false;
+    }
+
+    public Vector3 FaceTarget(GameObject _otherObject)
+    {
+        Vector3 facing = _otherObject.transform.position - transform.position;
+        return facing;
     }
 
     public void Block(int _blockNum)
@@ -162,6 +169,28 @@ public class PlayerController : MonoBehaviour
     public void FailedInput()
     {
         m_anim.SetTrigger("Impact");
-    }    
+    }
+
+    public void GainPoiseAdvantage()
+    {
+        m_anim.SetTrigger("Attack4");
+    }
+
+    public void LosePoiseAdvantage()
+    {
+        m_anim.SetTrigger("Impact");
+    }
+
+    public void WinCombat()
+    {
+        m_anim.SetTrigger("Attack4");
+        Invoke("ExitCombat", 1f);
+    }
+
+    public void LoseCombat()
+    {
+        m_anim.SetTrigger("Attack4");
+        Invoke("ExitCombat", 1f);
+    }
     #endregion
 }

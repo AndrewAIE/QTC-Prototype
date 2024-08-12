@@ -10,9 +10,17 @@ public class DetectRadius : MonoBehaviour
     void Awake()
     {
         m_detectionRadius = GetComponent<SphereCollider>();
-        m_player = GetComponent<PlayerController>();
+        m_player = GetComponentInParent<PlayerController>();
     }
 
-    
+    public void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Enemy"))
+        {
+            EnemyController enemy = other.GetComponentInParent<EnemyController>();
+            m_player.EnterCombat(enemy);
+            enemy.EnterCombat(m_player);
+        }
+    }
 
 }
