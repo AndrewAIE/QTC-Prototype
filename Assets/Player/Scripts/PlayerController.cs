@@ -20,14 +20,17 @@ public class PlayerController : MonoBehaviour
     public float m_turnSpeed;
 
     private Vector3 m_moveDirection;
+    [SerializeField]
+    private QTE_System m_combatSystem;
 
-    private QTE_System m_combatSystem; 
+    private Vector3 m_startPos;
+
     private void Awake()
     {
         m_cC = GetComponent<CharacterController>();
         m_anim = GetComponentInChildren<Animator>();
         m_engaged = false;
-        m_combatSystem = GetComponentInChildren<QTE_System>();
+        m_startPos = transform.position;
     }
 
     // Start is called before the first frame update
@@ -57,18 +60,11 @@ public class PlayerController : MonoBehaviour
         //set facing direction based off of input
         if(m_engaged)
         {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                ExitCombat();
-            }
+            
         }
         else
         {
-            handleOnInput();
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                EnterCombat(null);
-            }
+            handleOnInput();            
         }
         
     } 
@@ -101,6 +97,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void resetPlayer()
+    {
+        transform.position = m_startPos;
+    }
+
     #region QTECombat
     public void EnterCombat(EnemyController _enemy)
     {
@@ -128,16 +129,16 @@ public class PlayerController : MonoBehaviour
     {
         switch(_blockNum)
         {
-            case 1:
+            case 0:
                 m_anim.SetTrigger("Block1");
                 break;
-            case 2:
+            case 1:
                 m_anim.SetTrigger("Block2");
                 break;
-            case 3:
+            case 2:
                 m_anim.SetTrigger("Block3");
                 break;
-            case 4:
+            case 3:
                 m_anim.SetTrigger("Block4");
                 break;
             default:
@@ -149,16 +150,16 @@ public class PlayerController : MonoBehaviour
     {
         switch (_attackNum)
         {
-            case 1:
+            case 0:
                 m_anim.SetTrigger("Attack1");
                 break;
-            case 2:
+            case 1:
                 m_anim.SetTrigger("Attack2");
                 break;
-            case 3:
+            case 2:
                 m_anim.SetTrigger("Attack3");
                 break;
-            case 4:
+            case 3:
                 m_anim.SetTrigger("Attack4");
                 break;
             default:
@@ -190,7 +191,7 @@ public class PlayerController : MonoBehaviour
     public void LoseCombat()
     {
         m_anim.SetTrigger("Attack4");
-        Invoke("ExitCombat", 1f);
+        Invoke("ResetPlayer", 1f);
     }
     #endregion
 }
