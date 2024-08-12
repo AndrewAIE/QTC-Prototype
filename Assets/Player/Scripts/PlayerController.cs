@@ -103,6 +103,7 @@ public class PlayerController : MonoBehaviour
     public void EnterCombat()
     {
         m_anim.SetTrigger("DrawWeapon");
+        m_anim.SetBool("Run", false);
         m_engaged = true;
     }
 
