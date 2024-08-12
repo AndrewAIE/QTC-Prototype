@@ -22,6 +22,7 @@ public class QTE_System : MonoBehaviour
     /// reference to the player
     /// </summary>
     [SerializeField] private PlayerController m_playerReference;
+    [SerializeField] private EnemyController m_enemyReference;
 
     /// <summary>
     /// the QTE input for the player
@@ -51,6 +52,7 @@ public class QTE_System : MonoBehaviour
     void Awake()
     {
         i_playerInputs = new PlayerInputs();
+        m_StreamOBJ = Instantiate(StreamOBJ);
     }
     private void OnEnable()
     {
@@ -78,13 +80,13 @@ public class QTE_System : MonoBehaviour
         switch (m_currentState)
         {
             case QTEState.Waiting:
-               //if (!m_playerReference.combatAnimFinished) m_currentState = QTEState.Running;
+               if (!m_playerReference.CombatAnimFinished) m_currentState = QTEState.Running;
 
 
                 break;
 
             case QTEState.Running:
-                //if (m_playerReference.combatAnimFinished) m_currentState = QTEState.Waiting;
+                if (m_playerReference.CombatAnimFinished) m_currentState = QTEState.Waiting;
 
                 gatherInput();
                 StreamManager();

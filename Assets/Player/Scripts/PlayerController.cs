@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
 
     private EnemyController m_enemy;
 
-    public bool CombatAnimFinished;
+    public bool CombatAnimFinished = false;
 
     private void Awake()
     {

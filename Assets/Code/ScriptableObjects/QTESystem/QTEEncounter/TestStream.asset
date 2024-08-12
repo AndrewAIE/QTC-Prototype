@@ -26,3 +26,6 @@ MonoBehaviour:
     - inputs: 01000000
       mashAmount: 0
       TimeToComplete: 2
+    - inputs: 00000100
+      mashAmount: 0
+      TimeToComplete: 2
