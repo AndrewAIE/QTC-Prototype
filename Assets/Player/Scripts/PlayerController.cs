@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     private Camera m_playerCamera;
     Animator m_anim;
 
-    private bool m_engaged = false;
+    private bool m_engaged;
     private bool m_moving;
 
     public float m_turnSpeed;
@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     {
         m_cC = GetComponent<CharacterController>();
         m_anim = GetComponentInChildren<Animator>();
+        m_engaged = false;
     }
 
     // Start is called before the first frame update
@@ -37,8 +38,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {        
         if (m_moving)
-        {
-            Debug.Log("X Input: " + Move.action.ReadValue<Vector2>().x);
+        {            
             Vector3 rightVector = Move.action.ReadValue<Vector2>().x * getCameraRight(m_playerCamera);
             Vector3 forwardVector = Move.action.ReadValue<Vector2>().y * getCameraForward(m_playerCamera);
             
@@ -54,7 +54,22 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         //set facing direction based off of input
-        handleOnInput();
+        if(m_engaged)
+        {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                ExitCombat();
+            }
+        }
+        else
+        {
+            handleOnInput();
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                EnterCombat();
+            }
+        }
+        
     } 
     
     private Vector3 getCameraForward(Camera _playerCamera)
@@ -76,13 +91,35 @@ public class PlayerController : MonoBehaviour
         if (Move.action.WasPressedThisFrame())
         {
             m_moving = true;
-            m_anim.SetTrigger("Run");
+            m_anim.SetBool("Run", true);
         }
         if (Move.action.WasReleasedThisFrame())
         {
             m_moving = false;
-            m_anim.SetTrigger("Idle");
+            m_anim.SetBool("Run", false);
         }
+    }
+
+    public void EnterCombat()
+    {
+        m_anim.SetTrigger("DrawWeapon");
+        m_engaged = true;
+    }
+
+    public void ExitCombat()
+    {
+        m_anim.SetTrigger("SheatheWeapon");
+        m_engaged = false;
+    }
+
+    public void Block(int _blockNum)
+    {
+
+    }
+
+    public void Attack(int _attackNum)
+    {
+
     }
 
 }
