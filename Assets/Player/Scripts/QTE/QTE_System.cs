@@ -29,6 +29,11 @@ public class QTE_System : MonoBehaviour
     private QTEINPUTS m_playerQTEInput;
     private bool m_noInput;
 
+    //////// DELETE FOR BUILDS
+    public bool start;
+
+    ////////
+
     /// <summary>
     /// public access to the current stream (need to set up) (only change when not running)
     /// </summary>
@@ -227,4 +232,5 @@ public class QTE_System : MonoBehaviour
         i_West.Disable();
     }
     #endregion
+
 }
