@@ -1,8 +1,5 @@
 using QTCGlobals;
-using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -19,20 +16,24 @@ public class QTE_System: MonoBehaviour
     [SerializeField] private TextMeshProUGUI TextCanvas;
 
     /// <summary>
+    /// reference to the player
+    /// </summary>
+    [SerializeField] private PlayerController m_playerReference;
+
+    /// <summary>
     /// the QTE input for the player
     /// </summary>
     private QTEINPUTS m_playerQTEInput;
     private bool m_noInput;
-    
+ 
     /// <summary>
-    /// public access to the current stream (need to set up)
+    /// public access to the current stream (need to set up) (only change when not running)
     /// </summary>
     public QTE StreamOBJ;
     /// <summary>
     /// the current stream (if any)
     /// </summary>
     private QTE m_StreamOBJ;
-
     /// <summary>
     /// position in the QTEStream
     /// </summary>
@@ -72,7 +73,7 @@ public class QTE_System: MonoBehaviour
         {
             case QTEState.Waiting:
 
-                m_StreamOBJ = Instantiate(StreamOBJ);
+                m_StreamOBJ = Instantiate(StreamOBJ); // creates a new version of 
                 gatherInput();
                 for (int i = 0; i < 4; i++) // check inputs against
                 {
@@ -82,6 +83,7 @@ public class QTE_System: MonoBehaviour
 
             case QTEState.Running:
                 gatherInput();
+                
                     StreamManager();
                 if (m_StreamOBJ.stream.qteInputs.Length <= m_streamPosition)
                 {
@@ -94,10 +96,10 @@ public class QTE_System: MonoBehaviour
                 
                 break;
             case QTEState.Complete:
-                Debug.Log("Complete");
+                
                 break;
             case QTEState.Failed:
-                Debug.Log("Failed");
+                
                 break;
         }
         Display();
@@ -133,24 +135,22 @@ public class QTE_System: MonoBehaviour
                 bool allInputsCorrect = true;
                 for (int i = 0; i < 4; i++) // check inputs against
                 {
+                    Debug.LogWarning("Button Pressed: " + i + ", " + m_playerQTEInput.inputs[i]);
                     if (m_StreamOBJ.stream.qteInputs[m_streamPosition].inputs[i] == m_playerQTEInput.inputs[i])
                     {
                         correctInput = true;
                     }
                     if (correctInput != true) allInputsCorrect = false;
                 }
-                if (allInputsCorrect)
-                {
-                    if (m_StreamOBJ.stream.qteInputs[m_streamPosition].mashAmount > 0) m_StreamOBJ.stream.qteInputs[m_streamPosition].mashAmount--;
-                    else m_streamPosition++;
-                }
+                if (allInputsCorrect) OnSuccessInput(); 
+                else OnFailInput();
             }
             m_StreamOBJ.stream.qteInputs[m_streamPosition].TimeToComplete -= Time.unscaledDeltaTime;
         }
     }
     private void Display()
     {
-        for(int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++)
         {
             if (m_streamPosition < m_StreamOBJ.stream.qteInputs.Length)
                 ButtonCanvas[i].isOn = m_StreamOBJ.stream.qteInputs[m_streamPosition].inputs[i];
@@ -166,6 +166,7 @@ public class QTE_System: MonoBehaviour
             case QTEState.Running:
                 string timeLeft = string.Format("{0:0.00}", m_StreamOBJ.stream.qteInputs[m_streamPosition].TimeToComplete);
                 TextCanvas.text = $"Time: {timeLeft}";
+
                 break;
             case QTEState.Complete:
 
@@ -175,6 +176,30 @@ public class QTE_System: MonoBehaviour
                 break;
         }
     }
+    #endregion
+    #region Events
+    public void StartCombat(EnemyController enemy)
+    {
+
+    }
+    private void OnComplete()
+    {
+        Debug.Log("Complete");
+    }
+    private void OnFail()
+    {
+        Debug.Log("Failed");
+    }
+    private void OnFailInput()
+    {
+
+    }
+    private void OnSuccessInput()
+    {
+        if (m_StreamOBJ.stream.qteInputs[m_streamPosition].mashAmount > 0) m_StreamOBJ.stream.qteInputs[m_streamPosition].mashAmount--;
+        else m_streamPosition++;
+    }
+
     #endregion
     #region Destroy/Disable
     private void OnDisable()
