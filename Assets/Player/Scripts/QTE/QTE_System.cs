@@ -23,11 +23,15 @@ public class QTE_System: MonoBehaviour
     /// </summary>
     private QTEINPUTS m_playerQTEInput;
     private bool m_noInput;
+    
+    /// <summary>
+    /// public access to the current stream (need to set up)
+    /// </summary>
+    public QTE StreamOBJ;
     /// <summary>
     /// the current stream (if any)
     /// </summary>
-    private QTESTREAM m_Stream;
-    public QTE StreamOBJ;
+    private QTE m_StreamOBJ;
 
     /// <summary>
     /// position in the QTEStream
@@ -43,7 +47,6 @@ public class QTE_System: MonoBehaviour
     void Awake()
     {
         i_playerInputs = new PlayerInputs();
-        
     }
     private void OnEnable()
     {
@@ -68,7 +71,8 @@ public class QTE_System: MonoBehaviour
         switch (m_currentState)
         {
             case QTEState.Waiting:
-                m_Stream = StreamOBJ.stream;
+
+                m_StreamOBJ = Instantiate(StreamOBJ);
                 gatherInput();
                 for (int i = 0; i < 4; i++) // check inputs against
                 {
@@ -79,11 +83,11 @@ public class QTE_System: MonoBehaviour
             case QTEState.Running:
                 gatherInput();
                     StreamManager();
-                if (m_Stream.qteInputs.Length <= m_streamPosition)
+                if (m_StreamOBJ.stream.qteInputs.Length <= m_streamPosition)
                 {
                     m_currentState = QTEState.Complete;
                 }
-                else if (m_Stream.qteInputs[m_streamPosition].TimeToComplete <= 0)
+                else if (m_StreamOBJ.stream.qteInputs[m_streamPosition].TimeToComplete <= 0)
                 {
                     m_currentState = QTEState.Failed;
                 }
@@ -121,7 +125,7 @@ public class QTE_System: MonoBehaviour
     /// </summary>
     private void StreamManager()
     {
-        if(m_Stream.qteInputs.Length > m_streamPosition)
+        if (m_StreamOBJ.stream.qteInputs.Length > m_streamPosition)
         {
             if (!m_noInput)
             {
@@ -129,7 +133,7 @@ public class QTE_System: MonoBehaviour
                 bool allInputsCorrect = true;
                 for (int i = 0; i < 4; i++) // check inputs against
                 {
-                    if (m_Stream.qteInputs[m_streamPosition].inputs[i] == m_playerQTEInput.inputs[i])
+                    if (m_StreamOBJ.stream.qteInputs[m_streamPosition].inputs[i] == m_playerQTEInput.inputs[i])
                     {
                         correctInput = true;
                     }
@@ -137,19 +141,19 @@ public class QTE_System: MonoBehaviour
                 }
                 if (allInputsCorrect)
                 {
-                    if (m_Stream.qteInputs[m_streamPosition].mashAmount > 0) m_Stream.qteInputs[m_streamPosition].mashAmount--;
+                    if (m_StreamOBJ.stream.qteInputs[m_streamPosition].mashAmount > 0) m_StreamOBJ.stream.qteInputs[m_streamPosition].mashAmount--;
                     else m_streamPosition++;
                 }
             }
-            m_Stream.qteInputs[m_streamPosition].TimeToComplete -= Time.unscaledDeltaTime;
+            m_StreamOBJ.stream.qteInputs[m_streamPosition].TimeToComplete -= Time.unscaledDeltaTime;
         }
     }
     private void Display()
     {
         for(int i = 0; i < 4; i++)
         {
-            if (m_streamPosition < m_Stream.qteInputs.Length)
-                ButtonCanvas[i].isOn = m_Stream.qteInputs[m_streamPosition].inputs[i];
+            if (m_streamPosition < m_StreamOBJ.stream.qteInputs.Length)
+                ButtonCanvas[i].isOn = m_StreamOBJ.stream.qteInputs[m_streamPosition].inputs[i];
             else
                 ButtonCanvas[i].isOn = false;
         }
@@ -160,7 +164,7 @@ public class QTE_System: MonoBehaviour
 
                 break;
             case QTEState.Running:
-                string timeLeft = string.Format("{0:0.00}", m_Stream.qteInputs[m_streamPosition].TimeToComplete);
+                string timeLeft = string.Format("{0:0.00}", m_StreamOBJ.stream.qteInputs[m_streamPosition].TimeToComplete);
                 TextCanvas.text = $"Time: {timeLeft}";
                 break;
             case QTEState.Complete:
