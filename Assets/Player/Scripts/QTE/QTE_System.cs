@@ -9,15 +9,16 @@ using UnityEngine.UI;
 public class QTE_System : MonoBehaviour
 {
     [SerializeReference] private QTEState m_currentState = QTEState.Default;
-    private QTEState m_oldState = QTEState.Default;
+    private QTEState m_oldState;
 
     PlayerInputs i_playerInputs;
     private InputAction i_North, i_South, i_East, i_West;
 
+    private float poisness = 0.5f;
     
     [SerializeField] private Toggle[] ButtonCanvas;
     [SerializeField] private TextMeshProUGUI TextCanvas;
-
+    [SerializeField] private Scrollbar scrollCanvas;
     /// <summary>
     /// reference to the player
     /// </summary>
@@ -29,11 +30,6 @@ public class QTE_System : MonoBehaviour
     /// </summary>
     private QTEINPUTS m_playerQTEInput;
     private bool m_noInput;
-
-    //////// DELETE FOR BUILDS
-    public bool start;
-
-    ////////
 
     /// <summary>
     /// public access to the current stream (need to set up) (only change when not running)
@@ -74,7 +70,8 @@ public class QTE_System : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (start) m_currentState = QTEState.Running;
+        /*if (start) m_currentState = QTEState.Running;*/
+        scrollCanvas.value = poisness;
 
         OnStateChange();
         switch (m_currentState)
@@ -98,6 +95,9 @@ public class QTE_System : MonoBehaviour
                 {
                     OnFail();
                 }
+
+                if (poisness <= 0) OnFail();
+                else if (poisness >= 1) OnComplete();
 
                 break;
             case QTEState.Default:
@@ -198,6 +198,12 @@ public class QTE_System : MonoBehaviour
     /// </summary>
     private void OnComplete()
     {
+        if(poisness < 1)
+        {
+            m_streamPosition = 0;
+            return;
+        }
+
         m_playerReference.WinCombat();
         m_currentState = QTEState.Default;
         Debug.Log("Complete");
@@ -207,6 +213,13 @@ public class QTE_System : MonoBehaviour
     /// </summary>
     private void OnFail()
     {
+        if(poisness > 0)
+        {
+            poisness -= .1f;
+            m_streamPosition = 0;
+            return;
+        }
+
         m_playerReference.LoseCombat();
         m_currentState = QTEState.Default;
         Debug.Log("Failed");
@@ -216,6 +229,7 @@ public class QTE_System : MonoBehaviour
     /// </summary>
     private void OnFailInput()
     {
+        poisness -= .1f;
         m_playerReference.FailedInput();
     }
     /// <summary>
@@ -223,6 +237,7 @@ public class QTE_System : MonoBehaviour
     /// </summary>
     private void OnSuccessInput()
     {
+        poisness += 0.1f;
         for (int i = 0; i < 4; i++)
         {
             if (m_playerQTEInput.inputs[i] == true)
@@ -231,8 +246,6 @@ public class QTE_System : MonoBehaviour
                 break;
             }
         }
-
-        Debug.LogWarning("Buttons Pressed: " + m_playerQTEInput.inputs);
         if (m_StreamOBJ.stream.qteInputs[m_streamPosition].mashAmount > 0) m_StreamOBJ.stream.qteInputs[m_streamPosition].mashAmount--;
         else m_streamPosition++;
     }
@@ -247,7 +260,7 @@ public class QTE_System : MonoBehaviour
         switch (m_currentState)
         {
             case QTEState.Waiting:
-                
+                GetComponent<Canvas>().enabled = true;
                 break;
             case QTEState.Running:
                 m_StreamOBJ = Instantiate(StreamOBJ); // creates a new version of a Scriptable Object
