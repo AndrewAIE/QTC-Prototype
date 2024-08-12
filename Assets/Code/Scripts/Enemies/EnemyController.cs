@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,24 +6,29 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     private Animator m_anim;
+    private GameObject m_chaseTarget;
+    private Rigidbody m_rb;
+    public float RunSpeed;
     private bool m_engaged;
-    private enum nonCombatStates
+    public enum NonCombatStates
     {
         Idle,
         Patrol,
         ChasingPlayer
     }
 
+    private NonCombatStates m_state;
+
     private void Awake()
     {
-        
+        m_rb = GetComponentInParent<Rigidbody>();
         m_engaged = false;
-
     }
 
     private void Start()
     {
         m_anim = GetComponentInChildren<Animator>();
+        m_state = NonCombatStates.Idle;
     }
 
     public void GetCombatData()
@@ -30,7 +36,22 @@ public class EnemyController : MonoBehaviour
 
     }
 
-
+    private void Update()
+    {
+        if(!m_engaged)
+        {
+            switch (m_state)
+            {
+                case NonCombatStates.Idle:
+                    IdleUpdate();
+                    break;
+                case NonCombatStates.ChasingPlayer:
+                    ChasingPlayerUpdate();
+                    break;
+            }
+        }
+        
+    }
 
 
     public void EnterCombat(PlayerController _player)
@@ -67,16 +88,16 @@ public class EnemyController : MonoBehaviour
         switch (_attackNum)
         {
             case 0:
-                m_anim.SetTrigger("Attack1");
+                m_anim.SetTrigger("Block1");
                 break;
             case 1:
                 m_anim.SetTrigger("Attack2");
                 break;
             case 2:
-                m_anim.SetTrigger("Attack3");
+                m_anim.SetTrigger("Block1");
                 break;
             case 3:
-                m_anim.SetTrigger("Attack4");
+                m_anim.SetTrigger("Attack2");
                 break;
             default:
                 break;
@@ -114,5 +135,40 @@ public class EnemyController : MonoBehaviour
     {
         m_anim.SetTrigger("Attack4");
         Invoke("ExitCombat", 1f);
+    }
+
+
+    private void enterState(NonCombatStates _state)
+    {
+        m_state = _state;
+        switch(m_state)
+        {
+            case NonCombatStates.Idle:
+                m_anim.SetBool("Run", false);
+                break;
+            case NonCombatStates.ChasingPlayer:
+                m_anim.SetBool("Run", true);
+                break;
+        }
+    }
+
+
+    private void IdleUpdate()
+    {
+
+    }
+
+    private void ChasingPlayerUpdate()
+    {
+        Vector3 facingVector = m_chaseTarget.transform.position - transform.position;
+        transform.forward = facingVector;
+
+        m_rb.AddForce(transform.forward * RunSpeed * Time.deltaTime, ForceMode.Acceleration);
+    }
+
+    internal void PlayerFound(GameObject _targetObject)
+    {
+        m_chaseTarget = _targetObject;
+        enterState(NonCombatStates.ChasingPlayer);
     }
 }

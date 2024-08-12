@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour
 
     private void handleOnInput()
     {
-        if (Move.action.WasPressedThisFrame())
+        if (Move.action.IsInProgress())
         {
             m_moving = true;
             m_anim.SetBool("Run", true);
@@ -125,7 +125,8 @@ public class PlayerController : MonoBehaviour
 
     public void ExitCombat()
     {
-        m_anim.SetTrigger("SheatheWeapon");
+        m_anim.applyRootMotion = false;
+        
         m_engaged = false;
     }
 
@@ -144,15 +145,15 @@ public class PlayerController : MonoBehaviour
                 CombatAnimRunning = false;
                 break;
             case 1:
-                m_anim.SetTrigger("Block2");
+                m_anim.SetTrigger("Block1");
                 CombatAnimRunning = false;
                 break;
             case 2:
-                m_anim.SetTrigger("Block3");
+                m_anim.SetTrigger("Block1");
                 CombatAnimRunning = false;
                 break;
             case 3:
-                m_anim.SetTrigger("Block4");
+                m_anim.SetTrigger("Block1");
                 CombatAnimRunning = false;
                 break;
             default:
@@ -165,7 +166,7 @@ public class PlayerController : MonoBehaviour
         switch (_attackNum)
         {
             case 0:
-                m_anim.SetTrigger("Block1");
+                m_anim.SetTrigger("Attack2");
                 CombatAnimRunning = true;
                 Debug.Log("Combat Anim Finished = " + CombatAnimRunning);
                 break;
@@ -175,7 +176,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Combat Anim Finished = " + CombatAnimRunning);
                 break;
             case 2:
-                m_anim.SetTrigger("Block1");
+                m_anim.SetTrigger("Attack2");
                 CombatAnimRunning = true;
                 Debug.Log("Combat Anim Finished = " + CombatAnimRunning);
                 break;
@@ -206,8 +207,9 @@ public class PlayerController : MonoBehaviour
 
     public void WinCombat()
     {
-        m_anim.SetTrigger("Attack2");
-        Invoke("ExitCombat", 1f);
+        m_anim.SetTrigger("Attack3");
+        m_anim.SetTrigger("SheatheWeapon");
+        Invoke("ExitCombat", 3f);
     }
 
     public void LoseCombat()
