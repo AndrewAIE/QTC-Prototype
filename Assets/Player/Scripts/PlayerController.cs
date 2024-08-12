@@ -20,13 +20,14 @@ public class PlayerController : MonoBehaviour
     public float m_turnSpeed;
 
     private Vector3 m_moveDirection;
-    
 
+    private QTE_System m_combatSystem; 
     private void Awake()
     {
         m_cC = GetComponent<CharacterController>();
         m_anim = GetComponentInChildren<Animator>();
         m_engaged = false;
+        m_combatSystem = GetComponentInChildren<QTE_System>();
     }
 
     // Start is called before the first frame update
@@ -66,7 +67,7 @@ public class PlayerController : MonoBehaviour
             handleOnInput();
             if (Input.GetKeyDown(KeyCode.A))
             {
-                EnterCombat();
+                EnterCombat(null);
             }
         }
         
@@ -100,11 +101,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void EnterCombat()
+    #region QTECombat
+    public void EnterCombat(EnemyController _enemy)
     {
         m_anim.SetTrigger("DrawWeapon");
         m_anim.SetBool("Run", false);
+        m_combatSystem.StartCombat(_enemy);
         m_engaged = true;
+        m_moving = false;
     }
 
     public void ExitCombat()
@@ -115,12 +119,49 @@ public class PlayerController : MonoBehaviour
 
     public void Block(int _blockNum)
     {
-
+        switch(_blockNum)
+        {
+            case 1:
+                m_anim.SetTrigger("Block1");
+                break;
+            case 2:
+                m_anim.SetTrigger("Block2");
+                break;
+            case 3:
+                m_anim.SetTrigger("Block3");
+                break;
+            case 4:
+                m_anim.SetTrigger("Block4");
+                break;
+            default:
+                break;
+        }
     }
 
     public void Attack(int _attackNum)
     {
-
+        switch (_attackNum)
+        {
+            case 1:
+                m_anim.SetTrigger("Attack1");
+                break;
+            case 2:
+                m_anim.SetTrigger("Attack2");
+                break;
+            case 3:
+                m_anim.SetTrigger("Attack3");
+                break;
+            case 4:
+                m_anim.SetTrigger("Attack4");
+                break;
+            default:
+                break;
+        }
     }
 
+    public void FailedInput()
+    {
+        m_anim.SetTrigger("Impact");
+    }    
+    #endregion
 }
