@@ -8,8 +8,7 @@ namespace QTCGlobals
     {
         Waiting,
         Running,
-        Complete,
-        Failed
+        Default
     }
     /// <summary>
     /// Holds the Input and how many times it needs to be pressed
