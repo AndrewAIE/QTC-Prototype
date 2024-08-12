@@ -167,18 +167,22 @@ public class PlayerController : MonoBehaviour
             case 0:
                 m_anim.SetTrigger("Block1");
                 CombatAnimFinished = false;
+                Debug.Log("Combat Anim Finished = " + CombatAnimFinished);
                 break;
             case 1:
-                m_anim.SetTrigger("Block1");
+                m_anim.SetTrigger("Block1");                
                 CombatAnimFinished = false;
+                Debug.Log("Combat Anim Finished = " + CombatAnimFinished);
                 break;
             case 2:
                 m_anim.SetTrigger("Block1");
                 CombatAnimFinished = false;
+                Debug.Log("Combat Anim Finished = " + CombatAnimFinished);
                 break;
             case 3:
                 m_anim.SetTrigger("Block1");
                 CombatAnimFinished = false;
+                Debug.Log("Combat Anim Finished = " + CombatAnimFinished);
                 break;
             default:
                 break;
@@ -215,6 +219,7 @@ public class PlayerController : MonoBehaviour
     public void AnimationFinished()
     {
         CombatAnimFinished = true;
+        Debug.Log("Combat Anim Finished = " + CombatAnimFinished);
     }
     #endregion
 }
