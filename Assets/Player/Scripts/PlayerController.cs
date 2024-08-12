@@ -25,6 +25,10 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 m_startPos;
 
+    private EnemyController m_enemy;
+
+    public bool CombatAnimFinished;
+
     private void Awake()
     {
         m_cC = GetComponent<CharacterController>();
@@ -108,9 +112,15 @@ public class PlayerController : MonoBehaviour
         m_anim.SetTrigger("DrawWeapon");
         m_anim.SetBool("Run", false);
         transform.forward = FaceTarget(_enemy.gameObject);
-        m_combatSystem.StartCombat(_enemy);
+        m_enemy = _enemy;
+        Invoke("startQTE", 1f);
         m_engaged = true;
         m_moving = false;
+    }
+
+    private void startQTE()
+    {
+        m_combatSystem.StartCombat(m_enemy);
     }
 
     public void ExitCombat()
@@ -131,15 +141,19 @@ public class PlayerController : MonoBehaviour
         {
             case 0:
                 m_anim.SetTrigger("Block1");
+                CombatAnimFinished = false;
                 break;
             case 1:
                 m_anim.SetTrigger("Block2");
+                CombatAnimFinished = false;
                 break;
             case 2:
                 m_anim.SetTrigger("Block3");
+                CombatAnimFinished = false;
                 break;
             case 3:
                 m_anim.SetTrigger("Block4");
+                CombatAnimFinished = false;
                 break;
             default:
                 break;
@@ -151,16 +165,24 @@ public class PlayerController : MonoBehaviour
         switch (_attackNum)
         {
             case 0:
-                m_anim.SetTrigger("Attack1");
+                m_anim.SetTrigger("Block1");
+                CombatAnimFinished = false;
+                Debug.Log("Combat Anim Finished = " + CombatAnimFinished);
                 break;
             case 1:
-                m_anim.SetTrigger("Attack2");
+                m_anim.SetTrigger("Block1");                
+                CombatAnimFinished = false;
+                Debug.Log("Combat Anim Finished = " + CombatAnimFinished);
                 break;
             case 2:
-                m_anim.SetTrigger("Attack3");
+                m_anim.SetTrigger("Block1");
+                CombatAnimFinished = false;
+                Debug.Log("Combat Anim Finished = " + CombatAnimFinished);
                 break;
             case 3:
-                m_anim.SetTrigger("Attack4");
+                m_anim.SetTrigger("Block1");
+                CombatAnimFinished = false;
+                Debug.Log("Combat Anim Finished = " + CombatAnimFinished);
                 break;
             default:
                 break;
@@ -184,7 +206,7 @@ public class PlayerController : MonoBehaviour
 
     public void WinCombat()
     {
-        m_anim.SetTrigger("Attack4");
+        m_anim.SetTrigger("Attack2");
         Invoke("ExitCombat", 1f);
     }
 
@@ -192,6 +214,12 @@ public class PlayerController : MonoBehaviour
     {
         m_anim.SetTrigger("Attack4");
         Invoke("ResetPlayer", 1f);
+    }
+
+    public void AnimationFinished()
+    {
+        CombatAnimFinished = true;
+        Debug.Log("Combat Anim Finished = " + CombatAnimFinished);
     }
     #endregion
 }
