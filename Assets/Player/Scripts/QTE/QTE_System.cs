@@ -80,13 +80,13 @@ public class QTE_System : MonoBehaviour
         switch (m_currentState)
         {
             case QTEState.Waiting:
-               if (!m_playerReference.CombatAnimFinished) m_currentState = QTEState.Running;
+               if (!m_playerReference.CombatAnimRunning) m_currentState = QTEState.Running;
 
 
                 break;
 
             case QTEState.Running:
-                if (m_playerReference.CombatAnimFinished) m_currentState = QTEState.Waiting;
+                if (m_playerReference.CombatAnimRunning) m_currentState = QTEState.Waiting;
 
                 gatherInput();
                 StreamManager();
