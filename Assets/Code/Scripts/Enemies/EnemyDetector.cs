@@ -16,8 +16,15 @@ public class EnemyDetector : MonoBehaviour
     {
         if(other.CompareTag("Player"))
         {
-            m_enemy.PlayerFound(other.gameObject);        
+            m_enemy.PlayerWithinRange(other.gameObject);
+        }
+    }
 
+    public void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            m_enemy.CantFindPlayer();
         }
     }
 

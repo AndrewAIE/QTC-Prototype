@@ -8,26 +8,35 @@ public class EnemyController : MonoBehaviour
     private Animator m_anim;
     private GameObject m_chaseTarget;
     private Rigidbody m_rb;
+    private Collider m_collider;
     public float RunSpeed;
+    private bool m_chasingTarget;
+    private bool m_playerWithinRange;
     private bool m_engaged;
+    private int m_mask = 1 << 3;
     public enum NonCombatStates
     {
         Idle,
         Patrol,
-        ChasingPlayer
+        ChasingPlayer,
+        Dead
+            
     }
 
     private NonCombatStates m_state;
 
     private void Awake()
     {
-        m_rb = GetComponentInParent<Rigidbody>();
+        m_rb = GetComponent<Rigidbody>();
+        m_anim = GetComponentInChildren<Animator>();
+        m_collider = GetComponentInChildren<Collider>();
+        m_mask = ~m_mask;
         m_engaged = false;
     }
 
     private void Start()
     {
-        m_anim = GetComponentInChildren<Animator>();
+        
         m_state = NonCombatStates.Idle;
     }
 
@@ -48,17 +57,28 @@ public class EnemyController : MonoBehaviour
                 case NonCombatStates.ChasingPlayer:
                     ChasingPlayerUpdate();
                     break;
+                case NonCombatStates.Dead:
+                    break;
             }
         }
         
     }
 
+    private void FixedUpdate()
+    {
+        if(m_chasingTarget)
+        {
+            m_rb.AddForce(transform.forward * RunSpeed, ForceMode.Force);
+        }
+    }
 
     public void EnterCombat(PlayerController _player)
     {
         m_anim.SetTrigger("DrawWeapon");
         m_anim.SetBool("Run", false);
-        transform.forward = facePlayer(_player.transform.position);        
+        transform.forward = facePlayer(_player.transform.position);
+        m_rb.velocity = new Vector3(0,0,0);
+        m_chasingTarget = false;
         m_engaged = true;           
     }
 
@@ -132,8 +152,8 @@ public class EnemyController : MonoBehaviour
     }
 
     public void LoseCombat()
-    {
-        m_anim.SetTrigger("Attack4");
+    {        
+        enterState(NonCombatStates.Dead);
         Invoke("ExitCombat", 1f);
     }
 
@@ -147,7 +167,13 @@ public class EnemyController : MonoBehaviour
                 m_anim.SetBool("Run", false);
                 break;
             case NonCombatStates.ChasingPlayer:
+                m_chasingTarget = true;
                 m_anim.SetBool("Run", true);
+                break;
+            case NonCombatStates.Dead:
+                m_anim.SetBool("Dead", true);
+                m_rb.isKinematic = true;
+                m_collider.enabled = false;
                 break;
         }
     }
@@ -155,20 +181,48 @@ public class EnemyController : MonoBehaviour
 
     private void IdleUpdate()
     {
-
+        if(m_playerWithinRange)
+        {
+            searchForPlayer();
+        }
+        
     }
 
     private void ChasingPlayerUpdate()
     {
         Vector3 facingVector = m_chaseTarget.transform.position - transform.position;
-        transform.forward = facingVector;
-
-        m_rb.AddForce(transform.forward * RunSpeed * Time.deltaTime, ForceMode.Acceleration);
+        transform.forward = facingVector;       
     }
 
-    internal void PlayerFound(GameObject _targetObject)
+    internal void PlayerFound()
+    {        
+        enterState(NonCombatStates.ChasingPlayer);
+    }
+
+    private void searchForPlayer()
+    {
+        RaycastHit hit;
+        Vector3 facingVector = m_chaseTarget.transform.position - transform.position;
+        if(Physics.Raycast(transform.position, facingVector, out hit, facingVector.magnitude, m_mask))
+        {
+            Debug.Log("Cant Find Player");
+        }
+        else
+        {
+            Debug.Log("Player Found");
+            PlayerFound();
+        }
+    }
+
+    public void PlayerWithinRange(GameObject _targetObject)
     {
         m_chaseTarget = _targetObject;
-        enterState(NonCombatStates.ChasingPlayer);
+        m_playerWithinRange = true;
+    }
+
+    public void CantFindPlayer()
+    {
+        m_chaseTarget = null;
+        m_playerWithinRange = false;
     }
 }

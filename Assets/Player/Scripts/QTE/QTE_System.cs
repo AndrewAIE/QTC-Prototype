@@ -71,15 +71,13 @@ public class QTE_System : MonoBehaviour
     void Update()
     {
         /*if (start) m_currentState = QTEState.Running;*/
-        scrollCanvas.value = poisness;
+        //scrollCanvas.value = poisness;
 
         OnStateChange();
         switch (m_currentState)
         {
             case QTEState.Waiting:
                if (!m_playerReference.CombatAnimRunning) m_currentState = QTEState.Running;
-
-
                 break;
 
             case QTEState.Running:
@@ -182,7 +180,9 @@ public class QTE_System : MonoBehaviour
     public void StartCombat(EnemyController enemy)
     {
         /////////// other stuff to go here
-        
+        m_enemyReference = enemy;
+        m_streamPosition = 0;
+        poisness = 0.5f;
         ///////////
         StartQTE();
     }
@@ -205,7 +205,9 @@ public class QTE_System : MonoBehaviour
         }
 
         m_playerReference.WinCombat();
+        m_enemyReference.LoseCombat();
         m_currentState = QTEState.Default;
+        m_enemyReference = null;
         Debug.Log("Complete");
     }
     /// <summary>
@@ -221,6 +223,7 @@ public class QTE_System : MonoBehaviour
         }
 
         m_playerReference.LoseCombat();
+        m_enemyReference.WinCombat();
         m_currentState = QTEState.Default;
         Debug.Log("Failed");
     }
@@ -243,6 +246,7 @@ public class QTE_System : MonoBehaviour
             if (m_playerQTEInput.inputs[i] == true)
             {
                 m_playerReference.Attack(i);
+                m_enemyReference.Attack(i);
                 break;
             }
         }
