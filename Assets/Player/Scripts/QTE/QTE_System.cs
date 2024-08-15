@@ -152,7 +152,7 @@ public class QTE_System : MonoBehaviour
     {
         for (int i = 0; i < 4; i++)
         {
-            if (m_streamPosition < m_StreamOBJ.stream.qteInputs.Length)
+            if (m_streamPosition < m_StreamOBJ.stream.qteInputs.Length && !m_playerReference.CombatAnimRunning)
                 ButtonCanvas[i].isOn = m_StreamOBJ.stream.qteInputs[m_streamPosition].inputs[i];
             else
                 ButtonCanvas[i].isOn = false;

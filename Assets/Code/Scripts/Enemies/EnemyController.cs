@@ -82,6 +82,12 @@ public class EnemyController : MonoBehaviour
         m_engaged = true;           
     }
 
+    public void ExitCombat()
+    {        
+        
+        m_engaged = false;
+    }
+
     public void Block(int _blockNum)
     {
         switch (_blockNum)
@@ -108,16 +114,16 @@ public class EnemyController : MonoBehaviour
         switch (_attackNum)
         {
             case 0:
-                m_anim.SetTrigger("Block1");
+                m_anim.SetTrigger("Attack2");
                 break;
             case 1:
-                m_anim.SetTrigger("Attack2");
-                break;
-            case 2:
                 m_anim.SetTrigger("Block1");
                 break;
-            case 3:
+            case 2:
                 m_anim.SetTrigger("Attack2");
+                break;
+            case 3:
+                m_anim.SetTrigger("Block1");
                 break;
             default:
                 break;
@@ -148,7 +154,9 @@ public class EnemyController : MonoBehaviour
     public void WinCombat()
     {
         m_anim.SetTrigger("Attack4");
-        Invoke("ExitCombat", 1f);
+        m_anim.SetTrigger("SheatheWeapon");
+        Invoke("ExitCombat", 5f);
+        enterState(NonCombatStates.Idle);
     }
 
     public void LoseCombat()

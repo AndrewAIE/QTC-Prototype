@@ -88,7 +88,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &8744517478666216838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,8 +125,9 @@ MonoBehaviour:
   - {fileID: 8744517479286540409}
   - {fileID: 8744517480753889380}
   TextCanvas: {fileID: 8744517480725870663}
+  scrollCanvas: {fileID: 0}
   m_playerReference: {fileID: 0}
-  start: 0
+  m_enemyReference: {fileID: 0}
   StreamOBJ: {fileID: 11400000, guid: 9313a34b22a96374e9b163506b2bf2fd, type: 2}
   m_streamPosition: 0
 --- !u!1 &8744517478983966165

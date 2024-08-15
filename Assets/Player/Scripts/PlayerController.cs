@@ -103,6 +103,8 @@ public class PlayerController : MonoBehaviour
 
     private void resetPlayer()
     {
+        ExitCombat();
+        m_anim.SetBool("Dead", false);
         transform.position = m_startPos;
     }
 
@@ -125,7 +127,7 @@ public class PlayerController : MonoBehaviour
 
     public void ExitCombat()
     {
-        m_anim.applyRootMotion = false;
+        
         
         m_engaged = false;
     }
@@ -214,14 +216,14 @@ public class PlayerController : MonoBehaviour
 
     public void LoseCombat()
     {
-        m_anim.SetTrigger("Attack4");
-        Invoke("ResetPlayer", 1f);
+        m_anim.SetTrigger("Dead");
+        Invoke("resetPlayer", 4f);
     }
 
     public void AnimationFinished()
     {
         CombatAnimRunning = false;
-        Debug.Log("Combat Anim Finished = " + CombatAnimRunning);
+        Debug.Log("Combat Anim Running = " + CombatAnimRunning);
     }
     #endregion
 }
